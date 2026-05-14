@@ -1,0 +1,4 @@
+# Activate with: --spring.profiles.active=local
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
