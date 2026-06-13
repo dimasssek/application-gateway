@@ -1,3 +1,6 @@
+server:
+  port: 8088
+
 spring:
   application:
     name: gateway
@@ -27,12 +30,23 @@ spring:
               uri: forward:/actuator/health
               predicates:
                 - Path=/api/smoke
-            - id: users-api
-              uri: http://127.0.0.1:8081
+            - id: client-service
+              uri: ${app.services.client-service}
               predicates:
-                - Path=/api/users/**
+                - Path=/api/v1/clients/**,/api/v1/external-requests/**,/api/v1/batch-requests/**
               filters:
                 - StripPrefix=2
+            - id: application-service
+              uri: ${app.services.application-service}
+              predicates:
+                - Path=/product/**,/service/**,/profile-change/**,/document/**,/claim/**,/authority/**,/general-check,/applications/**
+              metadata:
+                response-timeout: 600000
+
+app:
+  services:
+    client-service: http://127.0.0.1:8080
+    application-service: http://127.0.0.1:8082
 
 management:
   endpoints:
